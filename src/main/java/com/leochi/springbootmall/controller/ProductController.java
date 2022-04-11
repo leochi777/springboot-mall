@@ -1,5 +1,6 @@
 package com.leochi.springbootmall.controller;
 
+import com.leochi.springbootmall.constant.ProductCategory;
 import com.leochi.springbootmall.dto.ProductRequest;
 import com.leochi.springbootmall.model.Product;
 import com.leochi.springbootmall.service.ProductService;
@@ -23,10 +24,13 @@ public class ProductController {
 
 
     @GetMapping("/products")
-    public ResponseEntity<List> getProducts(){
-        List<Product> productList=productService.getProducts();
+    public ResponseEntity<List> getProducts(
+            @RequestParam(required = false) ProductCategory category,
+            @RequestParam(required = false) String search){
+        List<Product> productList=productService.getProducts(category,search);
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
+
 
 
     @GetMapping("/products/{productId}")

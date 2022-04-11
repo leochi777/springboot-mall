@@ -1,5 +1,6 @@
 package com.leochi.springbootmall.service.impl;
 
+import com.leochi.springbootmall.constant.ProductCategory;
 import com.leochi.springbootmall.dao.ProductDao;
 import com.leochi.springbootmall.dto.ProductRequest;
 import com.leochi.springbootmall.model.Product;
@@ -22,8 +23,8 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public List<Product> getProducts() {
-        return productDao.getProducts();
+    public List<Product> getProducts(ProductCategory category,String search) {
+        return productDao.getProducts(category,search);
     }
 
     @Override
