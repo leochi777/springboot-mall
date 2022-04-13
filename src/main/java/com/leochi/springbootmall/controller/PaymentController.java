@@ -16,8 +16,7 @@ import java.util.UUID;
 @RestController
 public class PaymentController {
 
-    private final String channelId="1655981339";
-    private final String ChannelSecret="b201a511672e2bc203b6d7da963cf016";
+
     private final String url="https://sandbox-api-pay.line.me";
 
     @PostMapping("/payment/linePay")
