@@ -3,7 +3,6 @@ package com.leochi.springbootmall.dto;
 import com.leochi.springbootmall.constant.ProductCategory;
 
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 public class ProductRequest {
 

@@ -26,16 +26,21 @@ public class ProductController {
 
     @GetMapping("/products")
     public ResponseEntity<List> getProducts(
+            // Filtering
             @RequestParam(required = false) ProductCategory category,
-            @RequestParam(required = false) String search){
+            @RequestParam(required = false) String search,
+            // Sorting
+            @RequestParam(defaultValue = "created_date") String orderBy,
+            @RequestParam(defaultValue = "desc" )String sort) {
 
-        ProductQueryParams productQueryParams=new ProductQueryParams();
+        ProductQueryParams productQueryParams = new ProductQueryParams();
         productQueryParams.setCategory(category);
+        productQueryParams.setOrderBy(orderBy);
+        productQueryParams.setSort(sort);
         productQueryParams.setSearch(search);
-        List<Product> productList=productService.getProducts(productQueryParams);
+        List<Product> productList = productService.getProducts(productQueryParams);
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
-
 
 
     @GetMapping("/products/{productId}")
@@ -74,7 +79,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/products/{productId}")
-    public ResponseEntity<Product>deleteProduct(@PathVariable Integer productId){
+    public ResponseEntity<Product> deleteProduct(@PathVariable Integer productId) {
         productService.deleteProduct(productId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
