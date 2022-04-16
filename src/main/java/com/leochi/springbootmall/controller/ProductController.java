@@ -5,14 +5,19 @@ import com.leochi.springbootmall.dto.ProductQueryParams;
 import com.leochi.springbootmall.dto.ProductRequest;
 import com.leochi.springbootmall.model.Product;
 import com.leochi.springbootmall.service.ProductService;
+import com.leochi.springbootmall.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 
+@Validated
 @RestController
 public class ProductController {
 
@@ -25,21 +30,36 @@ public class ProductController {
 
 
     @GetMapping("/products")
-    public ResponseEntity<List> getProducts(
-            // Filtering
+    public ResponseEntity<Page<Product>> getProducts(
+            // Filtering 查詢條件
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) String search,
             // Sorting
             @RequestParam(defaultValue = "created_date") String orderBy,
-            @RequestParam(defaultValue = "desc" )String sort) {
-
+            @RequestParam(defaultValue = "desc" )String sort,
+            // Pagination 分頁
+            @RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit, // 找幾筆
+            @RequestParam(defaultValue = "0") @Min(0) Integer offset // 略過幾筆
+    ) {
         ProductQueryParams productQueryParams = new ProductQueryParams();
         productQueryParams.setCategory(category);
         productQueryParams.setOrderBy(orderBy);
         productQueryParams.setSort(sort);
         productQueryParams.setSearch(search);
+        productQueryParams.setLimit(limit);
+        productQueryParams.setOffset(offset);
+
         List<Product> productList = productService.getProducts(productQueryParams);
-        return ResponseEntity.status(HttpStatus.OK).body(productList);
+
+        Integer total=productService.countProduct(productQueryParams);
+
+        Page<Product> page =new Page<>();
+        page.setLimit(limit);
+        page.setOffset(offset);
+        page.setTotal(total);
+        page.setResults(productList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
 
